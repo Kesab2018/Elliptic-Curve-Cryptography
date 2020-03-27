@@ -1,0 +1,251 @@
+
+
+
+
+p-2 = ----A2
+
+
+
+
+2 -- E1
+xp -- A3
+
+yp ---A4
+
+zp --- A5
+
+xq -- A6
+yq ---- A7
+
+Zq---- A8
+
+
+zp^2 --- x1
+
+zq^2 ---x2
+
+U1 = X1*Z2Z2 -- X3  can be overidden 
+
+U2 = X2*Z1Z1  --X4 can be overridden 
+
+S1 = Y1*Z2*Z2Z2  for this first calculate z3
+
+Zq^3 = Zq * zq^2  --- X5
+
+now S1 = Y1 * Zq^3 ---- X6
+
+S2 = Y2*Z1*Z1Z1
+
+zp^3 = Zp^3  ----- X7
+
+S2 =  Y2 * Zp^3 ---- X8
+
+H = U2-U1  ---------E2
+
+2*H  -------E3
+
+I= (2*H) ^2 --- E4
+J= H*I  ------- E5
+ S2 - S1 ------ E6
+ r = 2*(S2-S1) - - E7
+ 
+  V = U1*I  --- E8
+  
+  X3 = r2-J-2*V
+  
+  R^2 = ---- A3
+  R2 - J ---- A4
+ 2*V --------- X3
+ 
+ xr(X3) =  -------A6
+ 
+ Y3 calculation
+ 
+ V-X3 -----------x4	
+ 
+ r*(V-X3) -------- x4
+ 
+ S1*J --------x3
+ 2*S*J --------x3
+ y= r*(V-X3) - 2*S*J --- E8  read from B1 did not store any where
+ 
+ Z3 = ((Z1+Z2)^2-Z1Z1-Z2Z2)*H
+ 
+ Z1Z1- Z2z2 ------- x4
+ 
+ Z1 +Z2 ----   x3
+ 
+ (Z1+Z2)^2  ----- X3
+ 
+ zr=(Z1+Z2)^2-Z1Z1-Z2Z2 -  x4 -- E4
+ 
+ 
+ 1/Z ---- t  -----  x5
+ 
+ 1/z2 ------A2
+ 
+ 1/z3 ----x5
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 	// ModAdd(TS1, TC1)
+	//            Start     Abort       f_sel     sec_calc        precision              operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (MODADD << 8) 
+	//			src_addr      			dest_addr    src_addr_e   src_addr_x
+			| (MWMAC_RAM_TS1 << 12) | (0x0 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+
+
+
+// xr = R2- J - 2*V
+// CopyV2H(A4, TS1)
+	//            Start     Abort       f_sel     sec_calc        precision              operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (COPYV2H << 8) 
+	//			src_addr      			dest_addr    		src_addr_e   src_addr_x
+			| (MWMAC_RAM_A4 << 12) | (MWMAC_RAM_TS1 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;	
+
+// CopyV2H(X3, TC1)
+	//            Start     Abort       f_sel     sec_calc        precision              operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (COPYV2H << 8) 
+	//			src_addr      			dest_addr    		src_addr_e   src_addr_x
+			| (MWMAC_RAM_X3 << 12) | (MWMAC_RAM_TC1 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;	
+	
+		// ModSub(TS1, TC1)
+	//            Start     Abort       f_sel     sec_calc        precision              operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (MODSUB << 8) 
+	//			src_addr      			dest_addr    src_addr_e   src_addr_x
+			| (MWMAC_RAM_P1 << 12) | (0x0 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;
+	
+	// CopyH2V(B1, X4)
+	//            Start     Abort       f_sel     sec_calc        precision         operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (COPYH2V << 8) 
+	//			src_addr      				dest_addr   	 src_addr_e   src_addr_x
+			| (MWMAC_RAM_B1 << 12) | (MWMAC_RAM_X4 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;
+	
+	
+	
+	
+	Add
+	
+	
+	// CopyV2H(A4, TS1)
+	//            Start     Abort       f_sel     sec_calc        precision              operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (COPYV2H << 8) 
+	//			src_addr      			dest_addr    		src_addr_e   src_addr_x
+			| (MWMAC_RAM_A4 << 12) | (MWMAC_RAM_TS1 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;	
+
+// CopyV2H(X3, TC1)
+	//            Start     Abort       f_sel     sec_calc        precision              operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (COPYV2H << 8) 
+	//			src_addr      			dest_addr    		src_addr_e   src_addr_x
+			| (MWMAC_RAM_X3 << 12) | (MWMAC_RAM_TC1 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;	
+	
+ 	// ModAdd(TS1, TC1)
+	//            Start     Abort       f_sel     sec_calc        precision              operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (MODADD << 8) 
+	//			src_addr      			dest_addr    src_addr_e   src_addr_x
+			| (MWMAC_RAM_TS1 << 12) | (0x0 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;
+ 
+	// CopyH2V(B1, X4)
+	//            Start     Abort       f_sel     sec_calc        precision         operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (COPYH2V << 8) 
+	//			src_addr      				dest_addr   	 src_addr_e   src_addr_x
+			| (MWMAC_RAM_B1 << 12) | (MWMAC_RAM_X4 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;
+	
+
+
+
+
+
+	//   2* V
+	// CopyV2V(E1, A1)
+	//            Start     Abort       f_sel     sec_calc        precision         operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (COPYV2V << 8) 
+	//			src_addr      			dest_addr    		src_addr_e   	src_addr_x
+			| (MWMAC_RAM_E1 << 12) | (MWMAC_RAM_A1 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;
+	
+	// CopyV2H(E8, B1)
+	//            Start     Abort       f_sel     sec_calc        precision              operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (COPYV2H << 8) 
+	//			src_addr      			dest_addr    		src_addr_e   src_addr_x
+			| (MWMAC_RAM_E8 << 12) | (MWMAC_RAM_B1 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;	
+	
+	// MontMult(A1, B1, P1)
+	//            Start     Abort       f_sel     sec_calc        precision         operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (MONTMULT << 8) 
+	//			src_addr     			dest_addr    		src_addr_e   src_addr_x
+			| (MWMAC_RAM_B1 << 12) | (MWMAC_RAM_A1 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;
+	
+	// CopyH2V(B1,X3)
+	//            Start     Abort       f_sel     sec_calc        precision         operation
+	mwmac_cmd = (1 << 0) | (0 << 1) | (mwmac_f_sel << 2) | (mwmac_sec_calc << 3) | (mwmac_cmd_prec << 4) | (COPYH2V << 8) 
+	//			src_addr      				dest_addr   	 src_addr_e   src_addr_x
+			| (MWMAC_RAM_B1 << 12) | (MWMAC_RAM_X3 << 17) | (0x0 << 22) | (0x0 << 27);
+	iowrite32(mwmac_cmd, MWMAC_CMD_ptr);
+	while(!mwmac_irq_var);
+	mwmac_irq_var = 0;
+
